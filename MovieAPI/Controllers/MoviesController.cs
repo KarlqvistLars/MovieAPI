@@ -1,0 +1,130 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MovieAPI.DTOs;
+using MovieAPI.Models;
+
+[Route("api/[controller]")]
+[ApiController]
+public class MoviesController : ControllerBase
+{
+    private readonly MovieAPIContext _context;
+    public MoviesController(MovieAPIContext context)
+    {
+        _context = context;
+    }
+
+    // GET: api/Movie
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
+    {
+        return await _context.Movie.ToListAsync();
+    }
+
+    // GET: api/Movie/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Movie>> GetMovie(int id)
+    {
+        var movie = await _context.Movie.FindAsync(id);
+
+        if (movie == null)
+        {
+            return NotFound();
+        }
+
+        return movie;
+    }
+
+    // PUT: api/Movie/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutMovie(int? id, Movie movie)
+    {
+        if (id != movie.Id)
+        {
+            return BadRequest();
+        }
+
+        _context.Entry(movie).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        } catch (DbUpdateConcurrencyException)
+        {
+            if (!MovieExists(id))
+            {
+                return NotFound();
+            } else
+            {
+                throw;
+            }
+        }
+
+        return NoContent();
+    }
+
+    // POST: api/Movie
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<MovieCreateDto>> PostMovie(MovieCreateDto movie)
+    {
+        // Genre
+        var genres = new List<Genre> { movie.Genres.Select(g => new Genre { GenreName = g.GenreName }).FirstOrDefault() };
+        // MovieDetails
+        var newMovieDetails = new MovieDetails {
+            Synopsis = movie.Synopsis,
+            Language = movie.Language,
+            Budget = movie.Budget
+        };
+        // Review
+        var newReview = new List<Review> { movie.Reviews.Select(r => new Review { ReviewerName = r.ReviewerName, Comment = r.Comment, Rating = r.Rating }).FirstOrDefault() };
+        // Actor
+        var newActor = new List<Actor> { movie.Actors.Select(a => new Actor { Name = a.Name, BirthYear = a.BirthYear }).FirstOrDefault() };
+        // Movie
+        var newMovie = new Movie {
+            Title = movie.Title,
+            Year = movie.Year,
+            Duration = movie.Duration,
+            Genres = genres,
+            Details = newMovieDetails,
+            Reviews = newReview
+        };
+
+        _context.Movie.Add(newMovie);
+        Console.WriteLine($"Movie added to context id: {newMovie.Id}.");
+
+
+        //_context.MovieDetails.Add(newMovieDetails);
+
+        //_context.Genre.AddRange(genres);
+
+        //_context.Review.AddRange(newReview);
+
+        //_context.Actor.AddRange(newActor);
+
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction("GetMovie", new { id = newMovie.Id }, newMovie);
+    }
+
+    // DELETE: api/Movie/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMovie(int? id)
+    {
+        var movie = await _context.Movie.FindAsync(id);
+        if (movie == null)
+        {
+            return NotFound();
+        }
+
+        _context.Movie.Remove(movie);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool MovieExists(int? id)
+    {
+        return _context.Movie.Any(e => e.Id == id);
+    }
+}
