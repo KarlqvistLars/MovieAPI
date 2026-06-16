@@ -14,21 +14,34 @@ namespace MovieAPI.Migrations
                 name: "Actor",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ActorId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthYear = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Actor", x => x.Id);
+                    table.PrimaryKey("PK_Actor", x => x.ActorId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Genre",
+                columns: table => new
+                {
+                    GenreId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GenreName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genre", x => x.GenreId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MovieDetails",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    MovieDetailsId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Synopsis = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -36,11 +49,11 @@ namespace MovieAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieDetails", x => x.Id);
+                    table.PrimaryKey("PK_MovieDetails", x => x.MovieDetailsId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Movie",
+                name: "Movies",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -52,79 +65,58 @@ namespace MovieAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movie", x => x.Id);
+                    table.PrimaryKey("PK_Movies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Movie_MovieDetails_DetailsId",
+                        name: "FK_Movies_MovieDetails_DetailsId",
                         column: x => x.DetailsId,
                         principalTable: "MovieDetails",
-                        principalColumn: "Id");
+                        principalColumn: "MovieDetailsId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "ActorMovie",
                 columns: table => new
                 {
-                    ActorsId = table.Column<int>(type: "int", nullable: false),
-                    MovieListId = table.Column<int>(type: "int", nullable: false)
+                    ActorsActorId = table.Column<int>(type: "int", nullable: false),
+                    MoviesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActorMovie", x => new { x.ActorsId, x.MovieListId });
+                    table.PrimaryKey("PK_ActorMovie", x => new { x.ActorsActorId, x.MoviesId });
                     table.ForeignKey(
-                        name: "FK_ActorMovie_Actor_ActorsId",
-                        column: x => x.ActorsId,
+                        name: "FK_ActorMovie_Actor_ActorsActorId",
+                        column: x => x.ActorsActorId,
                         principalTable: "Actor",
-                        principalColumn: "Id",
+                        principalColumn: "ActorId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActorMovie_Movie_MovieListId",
-                        column: x => x.MovieListId,
-                        principalTable: "Movie",
+                        name: "FK_ActorMovie_Movies_MoviesId",
+                        column: x => x.MoviesId,
+                        principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genre",
+                name: "GenreMovie",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GenreName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: true)
+                    GenresGenreId = table.Column<int>(type: "int", nullable: false),
+                    MoviesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genre", x => x.Id);
+                    table.PrimaryKey("PK_GenreMovie", x => new { x.GenresGenreId, x.MoviesId });
                     table.ForeignKey(
-                        name: "FK_Genre_Movie_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movie",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MovieActor",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MovieId = table.Column<int>(type: "int", nullable: false),
-                    ActorId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MovieActor", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MovieActor_Actor_ActorId",
-                        column: x => x.ActorId,
-                        principalTable: "Actor",
-                        principalColumn: "Id",
+                        name: "FK_GenreMovie_Genre_GenresGenreId",
+                        column: x => x.GenresGenreId,
+                        principalTable: "Genre",
+                        principalColumn: "GenreId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MovieActor_Movie_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movie",
+                        name: "FK_GenreMovie_Movies_MoviesId",
+                        column: x => x.MoviesId,
+                        principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -138,42 +130,35 @@ namespace MovieAPI.Migrations
                     ReviewerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: true)
+                    MovieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Review", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Review_Movie_MovieId",
+                        name: "FK_Review_Movies_MovieId",
                         column: x => x.MovieId,
-                        principalTable: "Movie",
-                        principalColumn: "Id");
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActorMovie_MovieListId",
+                name: "IX_ActorMovie_MoviesId",
                 table: "ActorMovie",
-                column: "MovieListId");
+                column: "MoviesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genre_MovieId",
-                table: "Genre",
-                column: "MovieId");
+                name: "IX_GenreMovie_MoviesId",
+                table: "GenreMovie",
+                column: "MoviesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movie_DetailsId",
-                table: "Movie",
-                column: "DetailsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MovieActor_ActorId",
-                table: "MovieActor",
-                column: "ActorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MovieActor_MovieId",
-                table: "MovieActor",
-                column: "MovieId");
+                name: "IX_Movies_DetailsId",
+                table: "Movies",
+                column: "DetailsId",
+                unique: true,
+                filter: "[DetailsId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Review_MovieId",
@@ -188,10 +173,7 @@ namespace MovieAPI.Migrations
                 name: "ActorMovie");
 
             migrationBuilder.DropTable(
-                name: "Genre");
-
-            migrationBuilder.DropTable(
-                name: "MovieActor");
+                name: "GenreMovie");
 
             migrationBuilder.DropTable(
                 name: "Review");
@@ -200,7 +182,10 @@ namespace MovieAPI.Migrations
                 name: "Actor");
 
             migrationBuilder.DropTable(
-                name: "Movie");
+                name: "Genre");
+
+            migrationBuilder.DropTable(
+                name: "Movies");
 
             migrationBuilder.DropTable(
                 name: "MovieDetails");

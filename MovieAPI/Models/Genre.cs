@@ -2,9 +2,10 @@
 {
     public class Genre
     {
-        public int Id { get; set; }
+        public int GenreId { get; set; }
         public string GenreName { get; set; } = string.Empty;
 
-        //public IEnumerable<Genre> Genres { get; set; } = new List<Genre>();
+        // M:M till Movies genom MovieGenre
+        public IEnumerable<Movie>? Movies { get; set; }
     }
 }

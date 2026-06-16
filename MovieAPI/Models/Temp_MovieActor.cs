@@ -1,6 +1,6 @@
 ﻿namespace MovieAPI.Models
 {
-    public class MovieActor
+    public class Temp_MovieActor
     {
         public int MovieId { get; set; }
         public Movie? Movie { get; set; }
