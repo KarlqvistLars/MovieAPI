@@ -1,4 +1,5 @@
-﻿using MovieAPI.Models;
+﻿using MovieAPI.Data;
+using MovieAPI.Models;
 
 namespace MovieAPI.Extensions
 {
