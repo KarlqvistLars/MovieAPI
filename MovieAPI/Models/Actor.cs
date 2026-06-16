@@ -1,5 +1,8 @@
-﻿namespace MovieAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MovieAPI.Models
 {
+    [Table("Actors")]
     public class Actor
     {
         public int ActorId { get; set; }

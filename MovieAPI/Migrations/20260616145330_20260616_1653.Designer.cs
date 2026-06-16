@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieAPI.Data;
 
@@ -10,9 +11,11 @@ using MovieAPI.Data;
 namespace MovieAPI.Migrations
 {
     [DbContext(typeof(MovieAPIContext))]
-    partial class MovieAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20260616145330_20260616_1653")]
+    partial class _20260616_1653
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace MovieAPI.Migrations
 
                     b.HasKey("ActorId");
 
-                    b.ToTable("Actors");
+                    b.ToTable("Actor");
                 });
 
             modelBuilder.Entity("MovieAPI.Models.Genre", b =>
@@ -86,7 +89,7 @@ namespace MovieAPI.Migrations
 
                     b.HasKey("GenreId");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genre");
                 });
 
             modelBuilder.Entity("MovieAPI.Models.Movie", b =>
@@ -172,7 +175,7 @@ namespace MovieAPI.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("MovieAPI.Models.Temp_MovieActor", b =>
@@ -195,7 +198,7 @@ namespace MovieAPI.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("MovieActors");
+                    b.ToTable("MovieActor");
                 });
 
             modelBuilder.Entity("ActorMovie", b =>

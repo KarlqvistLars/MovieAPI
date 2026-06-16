@@ -10,13 +10,12 @@ namespace MovieAPI
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("MovieAPIContext") ?? throw new InvalidOperationException("Connection string 'MovieAPIContext' not found.");
-
             builder.Services.AddDbContext<MovieAPIContext>(options => options.UseSqlServer(connectionString));
 
-
             // Add services to the container.
-
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -33,10 +32,14 @@ namespace MovieAPI
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<MovieAPIContext>();
-
-                // Säkerställer att databasen finns och är migrerad
-                context.Database.Migrate();
-
+                try
+                {
+                    // Säkerställer att databasen finns och är migrerad
+                    context.Database.Migrate();
+                } catch
+                {
+                    Console.WriteLine("Något fel uppstod vid kontroll ifall databasen existerar. \nSe till att SQL Server är igång och att anslutningssträngen är korrekt.");
+                }
                 // Anropar din seed-metod
                 Seed.Initialize(context);
             }
