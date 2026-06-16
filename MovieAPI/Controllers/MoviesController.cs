@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MovieAPI.DTOs;
 using MovieAPI.Models;
 
+namespace MovieAPI.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class MoviesController : ControllerBase
@@ -69,7 +71,7 @@ public class MoviesController : ControllerBase
     public async Task<ActionResult<MovieCreateDto>> PostMovie(MovieCreateDto movie)
     {
         // Genre
-        var genres = new List<Genre> { movie.Genres.Select(g => new Genre { GenreName = g.GenreName }).FirstOrDefault() };
+        var genres = movie.Genres.Select(g => new Genre { GenreName = g.GenreName }).ToList();
         // MovieDetails
         var newMovieDetails = new MovieDetails {
             Synopsis = movie.Synopsis,
@@ -77,9 +79,9 @@ public class MoviesController : ControllerBase
             Budget = movie.Budget
         };
         // Review
-        var newReview = new List<Review> { movie.Reviews.Select(r => new Review { ReviewerName = r.ReviewerName, Comment = r.Comment, Rating = r.Rating }).FirstOrDefault() };
+        var newReview = movie.Reviews.Select(r => new Review { ReviewerName = r.ReviewerName, Comment = r.Comment, Rating = r.Rating }).ToList();
         // Actor
-        var newActor = new List<Actor> { movie.Actors.Select(a => new Actor { Name = a.Name, BirthYear = a.BirthYear }).FirstOrDefault() };
+        var newActor = movie.Actors.Select(a => new Actor { Name = a.Name, BirthYear = a.BirthYear }).ToList();
         // Movie
         var newMovie = new Movie {
             Title = movie.Title,
@@ -87,20 +89,11 @@ public class MoviesController : ControllerBase
             Duration = movie.Duration,
             Genres = genres,
             Details = newMovieDetails,
-            Reviews = newReview
+            Reviews = newReview,
+            Actors = newActor
         };
 
         _context.Movie.Add(newMovie);
-        Console.WriteLine($"Movie added to context id: {newMovie.Id}.");
-
-
-        //_context.MovieDetails.Add(newMovieDetails);
-
-        //_context.Genre.AddRange(genres);
-
-        //_context.Review.AddRange(newReview);
-
-        //_context.Actor.AddRange(newActor);
 
         await _context.SaveChangesAsync();
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MovieAPI.Migrations
 {
     [DbContext(typeof(MovieAPIContext))]
-    [Migration("20260615144900_mssql.local_migration_589")]
-    partial class mssqllocal_migration_589
+    [Migration("20260615200358_mssql.local_migration_933")]
+    partial class mssqllocal_migration_933
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,12 @@ namespace MovieAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MovieId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
 
                     b.ToTable("Genre");
                 });
@@ -180,6 +185,13 @@ namespace MovieAPI.Migrations
                         .HasForeignKey("MovieId");
                 });
 
+            modelBuilder.Entity("MovieAPI.Models.Genre", b =>
+                {
+                    b.HasOne("MovieAPI.Models.Movie", null)
+                        .WithMany("Genres")
+                        .HasForeignKey("MovieId");
+                });
+
             modelBuilder.Entity("MovieAPI.Models.Movie", b =>
                 {
                     b.HasOne("MovieAPI.Models.MovieDetails", "Details")
@@ -218,6 +230,8 @@ namespace MovieAPI.Migrations
             modelBuilder.Entity("MovieAPI.Models.Movie", b =>
                 {
                     b.Navigation("Actors");
+
+                    b.Navigation("Genres");
 
                     b.Navigation("Reviews");
                 });

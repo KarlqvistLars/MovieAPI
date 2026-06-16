@@ -18,5 +18,7 @@ namespace MovieAPI.DTOs
         public IEnumerable<Review>? Reviews { get; set; }
         // Actors
         public IEnumerable<Actor>? Actors { get; set; }
+
+
     }
 }
