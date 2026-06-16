@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
+using MovieAPI.DTOs;
 using MovieAPI.Models;
 
 [Route("api/[controller]")]
@@ -17,21 +18,64 @@ public class MoviesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
     {
-        return await _context.Movies.ToListAsync();
+        // Vi använder .Include för att hämta den relaterade datan
+        var movies = await _context.Movies
+            .Include(m => m.Details)   // Hämtar MovieDetails
+            .Include(m => m.Actors)    // Hämtar listan av Actors
+            .Include(m => m.Genres)    // Hämtar listan av Genres
+            .Include(m => m.Reviews)   // Hämtar listan av Reviews
+            .ToListAsync();
+
+        // Mappa entiteter till DTO:er
+        var movieDtos = movies.Select(m => new MovieDto {
+            Id = m.Id,
+            Title = m.Title,
+            Year = m.Year,
+            Duration = m.Duration,
+            Details = new MovieDetailsDto {
+                Synopsis = m.Details.Synopsis,
+                Language = m.Details.Language,
+                Budget = m.Details.Budget
+            },
+            Actors = m.Actors.Select(a => new ActorDto { Name = a.Name, BirthYear = a.BirthYear }).ToList(),
+            Genres = m.Genres.Select(g => new GenreDto { GenreName = g.GenreName }).ToList(),
+            Reviews = m.Reviews.Select(r => new ReviewDto { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList()
+        }).ToList();
+        return Ok(movieDtos);
     }
 
     // GET: api/Movie/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Movie>> GetMovie(int id)
     {
-        var movie = await _context.Movies.FindAsync(id);
+        var movie = await _context.Movies
+            .Include(m => m.Details)   // Hämtar MovieDetails
+            .Include(m => m.Actors)    // Hämtar listan av Actors
+            .Include(m => m.Genres)    // Hämtar listan av Genres
+            .Include(m => m.Reviews)   // Hämtar listan av Reviews
+            .FirstOrDefaultAsync(m => m.Id == id);
 
         if (movie == null)
         {
             return NotFound();
         }
 
-        return movie;
+        var movieDto = new MovieDto {
+            Id = movie.Id,
+            Title = movie.Title,
+            Year = movie.Year,
+            Duration = movie.Duration,
+            Details = new MovieDetailsDto {
+                Synopsis = movie.Details.Synopsis,
+                Language = movie.Details.Language,
+                Budget = movie.Details.Budget
+            },
+            Actors = movie.Actors.Select(a => new ActorDto { Name = a.Name, BirthYear = a.BirthYear }).ToList(),
+            Genres = movie.Genres.Select(g => new GenreDto { GenreName = g.GenreName }).ToList(),
+            Reviews = movie.Reviews.Select(r => new ReviewDto { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList()
+        };
+
+        return Ok(movieDto);
     }
 
     // PUT: api/Movie/5
