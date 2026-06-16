@@ -6,9 +6,14 @@
         public string Title { get; set; } = string.Empty;
         public string Year { get; set; } = string.Empty;
         public string Duration { get; set; } = string.Empty;
-        public IEnumerable<Genre>? Genres { get; set; }
+
+        // 1:1 till Details
+        public int? DetailsId { get; set; }
         public MovieDetails? Details { get; set; }
-        public IEnumerable<Review>? Reviews { get; set; }
+        // M:M till Actors och Genres genom MovieActor och MovieGenre
         public IEnumerable<Actor>? Actors { get; set; }
+        public IEnumerable<Genre>? Genres { get; set; }
+        // 1:M till Reviews
+        public IEnumerable<Review>? Reviews { get; set; }
     }
 }

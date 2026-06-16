@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MovieAPI.Extensions;
+
 namespace MovieAPI
 {
     public class Program
@@ -9,6 +11,7 @@ namespace MovieAPI
             var connectionString = builder.Configuration.GetConnectionString("MovieAPIContext") ?? throw new InvalidOperationException("Connection string 'MovieAPIContext' not found.");
 
             builder.Services.AddDbContext<MovieAPIContext>(options => options.UseSqlServer(connectionString));
+
 
             // Add services to the container.
 
@@ -24,10 +27,22 @@ namespace MovieAPI
                 app.MapOpenApi();
             }
 
+            // Seed-logik
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<MovieAPIContext>();
+
+                // Säkerställer att databasen finns och är migrerad
+                context.Database.Migrate();
+
+                // Anropar din seed-metod
+                Seed.Initialize(context);
+            }
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
