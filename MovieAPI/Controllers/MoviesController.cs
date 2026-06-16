@@ -16,7 +16,7 @@ public class MoviesController : ControllerBase
 
     // GET: api/Movie
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
+    public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovie()
     {
         // Vi använder .Include för att hämta den relaterade datan
         var movies = await _context.Movies
@@ -78,30 +78,53 @@ public class MoviesController : ControllerBase
         return Ok(movieDto);
     }
 
-    // PUT: api/Movie/5
+    // PUT: api/Movie/2
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutMovie(int? id, Movie movie)
+    public async Task<IActionResult> PutMovie(int id, MovieDto movieDto)
     {
-        if (id != movie.Id)
+        // 1. Hämta befintlig film inklusive dess relaterade data
+        var existingMovie = await _context.Movies
+            .Include(m => m.Details)
+            .Include(m => m.Actors)
+            .Include(m => m.Genres)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (existingMovie == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
-        _context.Entry(movie).State = EntityState.Modified;
+        // 2. Uppdatera enkla fält
+        existingMovie.Title = movieDto.Title;
+        existingMovie.Year = movieDto.Year;
+        existingMovie.Duration = movieDto.Duration;
+
+        // 3. Uppdatera detaljer
+        if (existingMovie.Details != null && movieDto.Details != null)
+        {
+            existingMovie.Details.Synopsis = movieDto.Details.Synopsis;
+            existingMovie.Details.Language = movieDto.Details.Language;
+            existingMovie.Details.Budget = movieDto.Details.Budget;
+        }
+
+        // 4. Hantera listor (Actors/Genres)
+        // Detta är den svåra biten. Det enklaste sättet är att rensa gamla
+        // och lägga till nya, eller att göra en mer avancerad diff-logik.
+        // Exempel på "rensa och ersätt":
+        _context.Actors.RemoveRange(existingMovie.Actors);
+        existingMovie.Actors = movieDto.Actors.Select(a => new Actor { Name = a.Name }).ToList();
+
+        _context.Genres.RemoveRange(existingMovie.Genres);
+        existingMovie.Genres = movieDto.Genres.Select(g => new Genre { GenreName = g.GenreName }).ToList();
 
         try
         {
             await _context.SaveChangesAsync();
         } catch (DbUpdateConcurrencyException)
         {
-            if (!MovieExists(id))
-            {
-                return NotFound();
-            } else
-            {
-                throw;
-            }
+            if (!MovieExists(id)) return NotFound();
+            throw;
         }
 
         return NoContent();
@@ -126,6 +149,16 @@ public class MoviesController : ControllerBase
         if (movie == null)
         {
             return NotFound();
+        }
+        var details = await _context.MovieDetails.FindAsync(movie.DetailsId);
+        if (details != null)
+        {
+            _context.MovieDetails.Remove(details);
+        }
+        var review = await _context.Reviews.Where(r => r.MovieId == id).ToListAsync();
+        if (review != null)
+        {
+            _context.Reviews.RemoveRange(review);
         }
 
         _context.Movies.Remove(movie);

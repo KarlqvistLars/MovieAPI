@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
+using MovieAPI.Extensions;
 
 namespace MovieAPI
 {
@@ -27,17 +28,21 @@ namespace MovieAPI
             }
 
             // Seed-logik
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    var context = services.GetRequiredService<MovieAPIContext>();
-
-            //    // Säkerställer att databasen finns och är migrerad
-            //    context.Database.Migrate();
-
-            //    // Anropar din seed-metod
-            //    Seed.Initialize(context);
-            //}
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<MovieAPIContext>();
+                try
+                {
+                    // Säkerställer att databasen finns och är migrerad
+                    context.Database.Migrate();
+                } catch
+                {
+                    Console.WriteLine("Något fel uppstod vid kontroll ifall databasen existerar. \nSe till att SQL Server är igång och att anslutningssträngen är korrekt.");
+                }
+                // Anropar din seed-metod
+                Seed.Initialize(context);
+            }
 
             app.UseHttpsRedirection();
 
