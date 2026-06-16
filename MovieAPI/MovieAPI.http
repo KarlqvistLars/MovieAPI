@@ -1,6 +1,79 @@
-@MovieAPI_HostAddress = http://localhost:5131
+@MovieAPI_HostAddress = https://localhost:7150
 
-GET {{MovieAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+GET {{MovieAPI_HostAddress}}/api/movies
+
+###
+
+
+POST {{MovieAPI_HostAddress}}/api/movies
+Content-Type: application/json
+{
+        "Title": "De hänsynslösa (Reservoir Dogs)",
+        "Year": "1992",
+        "Duration": "99min",
+        "Genres": [
+            {
+                "Name": "Crime"
+            }
+        ],
+        "Synopsis": "Åtta män som planerar att råna en juvelerarbutik för en diamantleverans äter frukost på en restaurang. För att genomföra rånet samlar chefen Joe Cabot sex erfarna rånare som är främlingar för varandra. Joe och hans son, "Nice Guy" Eddie Cabot, har känt några i teamet i åratal, men för att dölja identiteter använder resten alias: Mr. White, en karriärkriminell; Mr. Blonde, en avtryckarglad före detta fånge; Mr. Orange, en ansedd knarklangare; Mr. Pink, en paranoid neurotiker; Mr. Brown, en pseudofilosof; och Mr. Blue, en lugn grupp.
+        När ett larm utlöses under rånet, efter att Blonde börjat skjuta åskådare, anländer polisen snabbt. Pink springer undan polisen, kapar en bil och dödar ett par poliser i en skottlossning. White, som skjuter poliser som förföljer en smygande, flyr med Orange, som blir skjuten när han kapar en bil innan han dödar föraren. Orange skjuts i buken och blöder kraftigt i baksätet på bilen som körs av White. Trots Oranges vädjanden om att bli förd till sjukhus insisterar White på att han inte är dödligt skadad. Vid deras gömställe i lager möter White och Orange Pink, som informerar dem om att han har gömt diamanterna i närheten. Pink tror att jobbet var en uppgörelse och att polisen väntade på att lägga ett bakhåll mot dem. White informerar Pink om att Brown är död, Blue och Blonde saknas, och att Blonde – en lös kanon – mördade flera åskådare under rånet. White är rasande över att Joe, hans gamle vän, skulle anställa Blonde, som han beskriver som en psykopat. Pink argumenterar med White, som känner sig ansvarig för att Orange blev skjuten, om huruvida han ska söka läkarvård för Orange, och Pink är försiktig med att Joe inte är där för att hämta en läkare. Paret drar vapen mot varandra, men de ger upp när Blonde anländer med en kidnappad polis, Marvin Nash.
+        I en återblick, efter att ha blivit villkorligt frigiven efter ett fyraårigt fängelsestraff, träffar Blonde Cabots. För att belöna honom för att han inte gav Joes namn till myndigheterna erbjuder Cabots Blonde ett jobb utan att dyka upp. Trots att han är tacksam insisterar Blonde på att han vill tillbaka till "riktigt arbete", och de rekryterar honom för rånet.",
+        "Language": "Engelska",
+        "Budget": "$1.2–3 million",
+        "ReviewerName": "Adam Brannon",
+        "Comment": "After last year’s bitterly disappointing Once Upon A Time in Hollywood, which presumably only received an Oscar nomination because of its subject matter, I decided it was time to revisit some of Tarantino’s classics. I’ve always been a huge fan of his work, but Once Upon A Time in Hollywood was such a drab, underwhelming, damp squib of a movie, I actually started to question my Tarantino loyalty.",
+        "Rating": 4,
+        "Actors": [
+            {
+                "Name": "Harvey Keitel",
+                "BirthYear": "1939"
+            },
+            {
+                "Name": "Tim Roth",
+                "BirthYear": "1961"
+            },
+            {
+                "Name": "Michael Madsen",
+                "BirthYear": "1957"
+            },
+            {
+                "Name": "Chris Penn",
+                "BirthYear": "1965"
+            },
+            {
+                "Name": "Steve Buscemi",
+                "BirthYear": "1957"
+            },
+            {
+                "Name": "Lawrence Tierney",
+                "BirthYear": "1919"
+            },
+            {
+                "Name": "Randy Brooks",
+                "BirthYear": "1950"
+            },
+            {
+                "Name": "Kirk Baltz",
+                "BirthYear": "1959"
+            },
+            {
+                "Name": "Edward Bunker",
+                "BirthYear": "1933"
+            },
+            {
+                "Name": "Quentin Tarantino",
+                "BirthYear": "1963"
+            },
+            {
+                "Name": "David Steen",
+                "BirthYear": "1936"
+            },
+            {
+                "Name": "Steven Wright",
+                "BirthYear": "1955"
+            }
+        ]
+}
 
 ###
