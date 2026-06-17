@@ -11,8 +11,8 @@ using MovieAPI.Data;
 namespace MovieAPI.Migrations
 {
     [DbContext(typeof(MovieAPIContext))]
-    [Migration("20260616153224_20260616_1732")]
-    partial class _20260616_1732
+    [Migration("20260617143403_20260617_1633")]
+    partial class _20260617_1633
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -178,29 +178,6 @@ namespace MovieAPI.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("MovieAPI.Models.Temp_MovieActor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActorId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("MovieActors");
-                });
-
             modelBuilder.Entity("ActorMovie", b =>
                 {
                     b.HasOne("MovieAPI.Models.Actor", null)
@@ -247,25 +224,6 @@ namespace MovieAPI.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("MovieAPI.Models.Temp_MovieActor", b =>
-                {
-                    b.HasOne("MovieAPI.Models.Actor", "Actor")
-                        .WithMany()
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieAPI.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
 
                     b.Navigation("Movie");
                 });
