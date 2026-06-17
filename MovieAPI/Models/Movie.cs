@@ -11,9 +11,9 @@
         public int? DetailsId { get; set; }
         public MovieDetails? Details { get; set; }
         // M:M till Actors och Genres genom MovieActor och MovieGenre
-        public IEnumerable<Actor>? Actors { get; set; }
-        public IEnumerable<Genre>? Genres { get; set; }
+        public ICollection<Actor>? Actors { get; set; } = new List<Actor>();
+        public ICollection<Genre>? Genres { get; set; } = new List<Genre>();
         // 1:M till Reviews
-        public IEnumerable<Review>? Reviews { get; set; }
+        public ICollection<Review>? Reviews { get; set; } = new List<Review>();
     }
 }

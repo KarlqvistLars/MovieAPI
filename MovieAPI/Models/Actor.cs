@@ -9,6 +9,6 @@ namespace MovieAPI.Models
         public string Name { get; set; } = string.Empty;
         public string BirthYear { get; set; } = string.Empty;
         // M:M till Movies genom MovieActor
-        public IEnumerable<Movie>? Movies { get; set; }
+        public ICollection<Movie>? Movies { get; set; }
     }
 }
