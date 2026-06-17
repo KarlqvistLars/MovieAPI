@@ -32,14 +32,14 @@ public class MoviesController : ControllerBase
             Title = m.Title,
             Year = m.Year,
             Duration = m.Duration,
-            Details = new MovieDetailsDto {
+            Details = m.Details != null ? new MovieDetailsDto {
                 Synopsis = m.Details.Synopsis,
                 Language = m.Details.Language,
                 Budget = m.Details.Budget
-            },
-            Actors = m.Actors.Select(a => new ActorDto { Name = a.Name, BirthYear = a.BirthYear }).ToList(),
-            Genres = m.Genres.Select(g => new GenreDto { GenreName = g.GenreName }).ToList(),
-            Reviews = m.Reviews.Select(r => new ReviewDto { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList()
+            } : null,
+            Actors = m.Actors?.Select(a => new ActorDto { Name = a.Name, BirthYear = a.BirthYear }).ToList(),
+            Genres = m.Genres?.Select(g => new GenreDto { GenreName = g.GenreName }).ToList(),
+            Reviews = m.Reviews?.Select(r => new ReviewDto { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList()
         }).ToList();
         return Ok(movieDtos);
     }
@@ -60,23 +60,55 @@ public class MoviesController : ControllerBase
             return NotFound();
         }
 
+#pragma warning disable CS8601 // Possible null reference assignment.
         var movieDto = new MovieDto {
             Id = movie.Id,
             Title = movie.Title,
             Year = movie.Year,
             Duration = movie.Duration,
-            Details = new MovieDetailsDto {
+            Details = movie.Details != null ? new MovieDetailsDto {
                 Synopsis = movie.Details.Synopsis,
                 Language = movie.Details.Language,
                 Budget = movie.Details.Budget
-            },
-            Actors = movie.Actors.Select(a => new ActorDto { Name = a.Name, BirthYear = a.BirthYear }).ToList(),
-            Genres = movie.Genres.Select(g => new GenreDto { GenreName = g.GenreName }).ToList(),
-            Reviews = movie.Reviews.Select(r => new ReviewDto { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList()
+            } : null,
+            Actors = movie.Actors?.Select(a => new ActorDto { Name = a.Name, BirthYear = a.BirthYear }).ToList(),
+            Genres = movie.Genres?.Select(g => new GenreDto { GenreName = g.GenreName }).ToList(),
+            Reviews = movie.Reviews?.Select(r => new ReviewDto { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList()
+        };
+#pragma warning restore CS8601 // Possible null reference assignment.
+        return Ok(movieDto);
+    }
+
+    // GET: api/Movie/5
+    [HttpGet("{id}/details")]
+    public async Task<ActionResult<Movie>> GetMovieDetails(int id)
+    {
+        var movie = await _context.Movies
+            .Include(m => m.Details)   // Hämtar MovieDetails
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movie == null)
+        {
+            return NotFound();
+        }
+
+
+        var movieDto = new MovieDto {
+            Id = movie.Id,
+            Title = movie.Title,
+            Year = movie.Year,
+            Duration = movie.Duration,
+            Details = movie.Details != null ? new MovieDetailsDto {
+                Synopsis = movie.Details.Synopsis,
+                Language = movie.Details.Language,
+                Budget = movie.Details.Budget
+            } : null,
         };
 
         return Ok(movieDto);
     }
+
+
 
     // PUT: api/Movie/2
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -133,13 +165,58 @@ public class MoviesController : ControllerBase
     // POST: api/Movie
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+    public async Task<ActionResult<Movie>> PostMovie(MovieDto movieDto)
     {
+        // Skapa en ny Movie-entitet baserat på DTO:n och spara de grundläggande fälten, lägg sedan till relaterade data (Details, Actors, Genres, Reviews)
+        var movie = new Movie { Title = movieDto.Title, Year = movieDto.Year, Duration = movieDto.Duration };
+        // Spara MovieDetails
+        if (movieDto.Details != null)
+        {
+            movie.Details = new MovieDetails {
+                Synopsis = movieDto.Details.Synopsis,
+                Language = movieDto.Details.Language,
+                Budget = movieDto.Details.Budget
+            };
+        }
+        // Spara Actors
+        if (movieDto.Actors != null)
+        {
+            foreach (var actorDto in movieDto.Actors)
+            {
+                movie.Actors.Add(new Actor { Name = actorDto.Name, BirthYear = actorDto.BirthYear });
+            }
+        }
+        // Spara Genre
+        if (movieDto.Genres != null)
+        {
+            foreach (var genreDto in movieDto.Genres)
+            {
+                var existingGenre = await _context.Genres.FirstOrDefaultAsync(g => g.GenreName == genreDto.GenreName);
+                movie.Genres.Add(existingGenre ?? new Genre { GenreName = genreDto.GenreName });
+            }
+        }
+        // Spara Review
+        if (movieDto.Reviews != null)
+        {
+            foreach (var reviewDto in movieDto.Reviews)
+            {
+                movie.Reviews.Add(new Review { ReviewerName = reviewDto.ReviewerName, Rating = reviewDto.Rating, Comment = reviewDto.Comment });
+            }
+        }
+        // Lägg till den nya filmen i databasen
         _context.Movies.Add(movie);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+        // Spara i en try catch för att hantera eventuella datakonflikter.
+        try
+        {
+            await _context.SaveChangesAsync();
+        } catch (DbUpdateException)
+        {
+            return Conflict("Ett fel uppstod vid sparande, troligen en konflikt med existerande data.");
+        }
+        // Returnera resultatet med CreatedAtAction som pekar på GetMovie filmdatat.
+        return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
     }
+
 
     // DELETE: api/Movie/5
     [HttpDelete("{id}")]
