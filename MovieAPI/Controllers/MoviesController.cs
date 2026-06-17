@@ -3,9 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
 using MovieAPI.DTOs;
 using MovieAPI.Models;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class MoviesController : ControllerBase
 {
     private readonly MovieAPIContext _context;
@@ -79,7 +80,22 @@ public class MoviesController : ControllerBase
         return Ok(movieDto);
     }
 
-    // GET: api/Movie/5
+    // GET: api/Movie/5/reviews
+    [HttpGet("{id}/reviews")]
+    public async Task<ActionResult<Movie>> GetMovieReviews(int id)
+    {
+        var movie = await _context.Movies
+            .Include(m => m.Reviews)   // Hämta Review för id
+            .FirstOrDefaultAsync(m => m.Id == id);
+        if (movie == null)
+        {
+            return NotFound();
+        }
+        var reviewDtos = movie.Reviews?.Select(r => new ReviewDto { Title = movie.Title, ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment }).ToList();
+        return Ok(reviewDtos);
+    }
+
+    // GET: api/Movie/5/details
     [HttpGet("{id}/details")]
     public async Task<ActionResult<Movie>> GetMovieDetails(int id)
     {
@@ -91,24 +107,15 @@ public class MoviesController : ControllerBase
         {
             return NotFound();
         }
+        var details = movie?.Details != null ? new MovieDetailsDto {
+            Title = movie?.Title,
+            Synopsis = movie?.Details.Synopsis,
+            Language = movie?.Details.Language,
+            Budget = movie?.Details.Budget
+        } : null;
 
-
-        var movieDto = new MovieDto {
-            Id = movie.Id,
-            Title = movie.Title,
-            Year = movie.Year,
-            Duration = movie.Duration,
-            Details = movie.Details != null ? new MovieDetailsDto {
-                Synopsis = movie.Details.Synopsis,
-                Language = movie.Details.Language,
-                Budget = movie.Details.Budget
-            } : null,
-        };
-
-        return Ok(movieDto);
+        return Ok(details);
     }
-
-
 
     // PUT: api/Movie/2
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -216,7 +223,6 @@ public class MoviesController : ControllerBase
         // Returnera resultatet med CreatedAtAction som pekar på GetMovie filmdatat.
         return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
     }
-
 
     // DELETE: api/Movie/5
     [HttpDelete("{id}")]

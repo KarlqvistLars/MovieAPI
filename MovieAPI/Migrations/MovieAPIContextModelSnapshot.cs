@@ -175,29 +175,6 @@ namespace MovieAPI.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("MovieAPI.Models.Temp_MovieActor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActorId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("MovieActors");
-                });
-
             modelBuilder.Entity("ActorMovie", b =>
                 {
                     b.HasOne("MovieAPI.Models.Actor", null)
@@ -244,25 +221,6 @@ namespace MovieAPI.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("MovieAPI.Models.Temp_MovieActor", b =>
-                {
-                    b.HasOne("MovieAPI.Models.Actor", "Actor")
-                        .WithMany()
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieAPI.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
 
                     b.Navigation("Movie");
                 });

@@ -1,0 +1,31 @@
+@MovieAPI_HostAddress = https://localhost:7150
+
+GET {{MovieAPI_HostAddress}}/api/actors
+
+###
+
+GET {{MovieAPI_HostAddress}}/api/actors/8
+
+###
+
+POST {{MovieAPI_HostAddress}}/api/actors
+Content-Type: application/json
+{
+    "name": "Petter Svensson",
+    "birthYear": "1975",
+    "movies": null 
+}
+
+###
+
+PUT {{MovieAPI_HostAddress}}/api/actors/8
+Content-Type: application/json
+
+{
+    "actorid": 8,
+    "name": "Henrik R Dorsin",
+    "birthYear": "1977"
+}
+
+
+###
