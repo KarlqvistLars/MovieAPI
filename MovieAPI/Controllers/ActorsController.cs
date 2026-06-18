@@ -36,7 +36,7 @@ public class ActorsController : ControllerBase
     // PUT: api/Actor/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{actorid:int}")]
-    public async Task<IActionResult> PutActor(int? actorid, ActorDto actor)
+    public async Task<IActionResult> PutActor(int actorid, ActorDto actor)
     {
         if (actorid != actor.ActorId) return BadRequest();
         var existingActor = await _context.Actors

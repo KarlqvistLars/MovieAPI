@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
 using MovieAPI.Extensions;
+using MovieAPI.Interfaces;
+using MovieAPI.Services;
 
 namespace MovieAPI
 {
@@ -9,6 +11,8 @@ namespace MovieAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+
             var connectionString = builder.Configuration.GetConnectionString("MovieAPIContext") ?? throw new InvalidOperationException("Connection string 'MovieAPIContext' not found.");
             builder.Services.AddDbContext<MovieAPIContext>(options => options.UseSqlServer(connectionString));
 
@@ -18,6 +22,9 @@ namespace MovieAPI
                 x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            builder.Services.AddScoped<IMovieAPIContext, MovieAPIContext>();
+            builder.Services.AddScoped<IMovieService, MovieService>();
 
             var app = builder.Build();
 
