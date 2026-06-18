@@ -1,0 +1,5 @@
+@MovieAPI_HostAddress = https://localhost:7150
+
+GET {{MovieAPI_HostAddress}}/api/movies/2/reviews
+
+###

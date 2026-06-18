@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="MovieAPI.Tests/MovieAPI.Tests.csproj" Id="d6c190e9-ad22-4d9d-bde3-10d18852cca2" />
   <Project Path="MovieAPI/MovieAPI.csproj" />
 </Solution>

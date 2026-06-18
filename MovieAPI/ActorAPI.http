@@ -4,7 +4,7 @@ GET {{MovieAPI_HostAddress}}/api/actors
 
 ###
 
-GET {{MovieAPI_HostAddress}}/api/actors/8
+GET {{MovieAPI_HostAddress}}/api/actors/10
 
 ###
 
@@ -18,14 +18,19 @@ Content-Type: application/json
 
 ###
 
-PUT {{MovieAPI_HostAddress}}/api/actors/8
+PUT {{MovieAPI_HostAddress}}/api/actors/10
 Content-Type: application/json
 
 {
-    "actorid": 8,
-    "name": "Henrik R Dorsin",
-    "birthYear": "1977"
+  "actorId": 10,
+  "name": "Petterson Sven",
+  "birthYear": "1974",
+  "movies": null
 }
 
-
 ###
+POST {{MovieAPI_HostAddress}}/api/movies/2/actors/3
+Content-Type: application/json
+{
+
+}
