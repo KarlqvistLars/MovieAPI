@@ -232,7 +232,8 @@ namespace MovieAPI.Migrations
 
             modelBuilder.Entity("MovieAPI.Models.MovieDetails", b =>
                 {
-                    b.Navigation("Movie");
+                    b.Navigation("Movie")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

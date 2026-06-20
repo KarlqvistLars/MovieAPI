@@ -1,9 +1,8 @@
-﻿using MovieAPI.Data;
-using MovieAPI.Models;
+﻿using MovieAPI.Models;
 
-namespace MovieAPI.Extensions
+namespace MovieAPI.Data.Seed
 {
-    public static class Seed
+    public static class DbSeeder
     {
         public static void Initialize(MovieAPIContext context)
         {

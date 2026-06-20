@@ -4,6 +4,100 @@ GET {{MovieAPI_HostAddress}}/api/movies
 
 ###
 
-GET {{MovieAPI_HostAddress}}/api/movies/2
+@id=2
+GET {{MovieAPI_HostAddress}}/api/movies/{{id}}
 
 ###
+
+GET {{MovieAPI_HostAddress}}/api/movies/{{id}}/details
+
+###
+
+PUT {{MovieAPI_HostAddress}}/api/movies/2
+Content-Type: application/json
+
+{
+  "title": "Monty Python's Life of Brian",
+  "year": "1979 ",
+  "duration": "94 min",
+  "details": {
+    "synopsis": "The film's themes of religious satire were controversial at the time of its release, drawing accusations of blasphemy and protests from some religious groups..",
+    "language": "Engelska",
+    "budget": "$4 million"
+  },
+  "actors": [
+    {
+      "name": "Graham Chapman",
+      "birthYear": "1941"
+    },
+    {
+      "name": "John Cleese",
+      "birthYear": "1939"
+    },
+    {
+      "name": "Eric Idle",
+      "birthYear": "1943"
+    }
+  ],
+  "genres": [
+    {
+      "genreName": "Comedy"
+    },
+    {
+      "genreName": "Satire"
+    }
+  ],
+  "reviews": [
+    {
+      "reviewerName": "Adam Brannon",
+      "comment": "After last year’s bitterly disappointing Once Upon A Time in Hollywood bla bla.",
+      "rating": 4
+    }
+  ]
+}
+
+###
+
+POST {{MovieAPI_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "Sällskapsresan",
+  "year": "1980",
+  "duration": "107 min",
+  "details": {
+    "synopsis": "Stig-Helmer åker på charterresa till den fiktiva orten Nueva Estocolmo (’Nya Stockholm’) på Gran Canaria. Huvudberättelsen kretsar kring Stig-Helmer Olsson (Lasse Åberg) och norrmannen Ole Bramserud (Jon Skolmen), som av en slump hamnar bredvid varandra på flygplanet och sedan också tvingas dela hotellrum.",
+    "language": "Svenska",
+    "budget": "3 MSEK"
+  },
+  "actors": [
+    {
+      "name": "Lasse Åberg",
+      "birthYear": "1940"
+    },
+    {
+      "name": "Jon Skolmen",
+      "birthYear": "1940"
+    }
+  ],
+  "genres": [
+    {
+      "genreName": "Comedy"
+    },
+    {
+      "genreName": "Satire"
+    }
+  ],
+  "reviews": [
+    {
+      "reviewerName": "Martin Söderström - Aftonbladet",
+      "comment": "Sällskapsresan – filmerna tillhör några av svensk films största framgångar någonsin. Bara den första filmen i serien sågs av 2,8 miljoner svenskar på bio – och hela serien har spelat in över 300 miljoner kronor.",
+      "rating": 4
+    }
+  ]
+}
+
+###
+@delid=7
+DELETE {{MovieAPI_HostAddress}}/api/movies/{{delid}}
+

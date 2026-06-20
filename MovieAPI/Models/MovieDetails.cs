@@ -8,7 +8,7 @@
         public string Budget { get; set; } = string.Empty;
 
         // 1:1 till Movie
-        public Movie? Movie { get; set; }
+        public Movie Movie { get; set; } = null!;
 
     }
 }

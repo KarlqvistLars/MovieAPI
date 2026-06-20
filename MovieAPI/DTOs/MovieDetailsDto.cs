@@ -2,9 +2,9 @@
 {
     public class MovieDetailsDto
     {
-        public string? Title { get; set; }
-        public string Synopsis { get; set; }
-        public string Language { get; set; }
-        public string Budget { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Synopsis { get; set; } = string.Empty;
+        public string Language { get; set; } = string.Empty;
+        public string Budget { get; set; } = string.Empty;
     }
 }

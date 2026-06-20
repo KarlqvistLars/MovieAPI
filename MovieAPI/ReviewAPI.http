@@ -1,5 +1,29 @@
 @MovieAPI_HostAddress = https://localhost:7150
 
-GET {{MovieAPI_HostAddress}}/api/movies/2/reviews
+GET {{MovieAPI_HostAddress}}/api/reviews
+
+###
+
+GET {{MovieAPI_HostAddress}}/api/reviews/{{id}}
+
+###
+@id=1
+GET {{MovieAPI_HostAddress}}/api/movies/{{id}}/reviews
+
+@movieId=2
+###
+POST {{MovieAPI_HostAddress}}/api/movies/{{movieId}}/reviews
+
+###
+PUT {{MovieAPI_HostAddress}}/api/reviews/{id}
+Content-Type: application/json
+
+{
+  //Nullable
+}
+
+###
+@delid=2
+DELETE {{MovieAPI_HostAddress}}/api/reviews/{{delid}}
 
 ###

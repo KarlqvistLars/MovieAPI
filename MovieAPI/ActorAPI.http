@@ -3,34 +3,40 @@
 GET {{MovieAPI_HostAddress}}/api/actors
 
 ###
-
-GET {{MovieAPI_HostAddress}}/api/actors/10
+@Id=26
+GET {{MovieAPI_HostAddress}}/api/actors/{{Id}}
 
 ###
 
 POST {{MovieAPI_HostAddress}}/api/actors
 Content-Type: application/json
+
 {
     "name": "Petter Svensson",
-    "birthYear": "1975",
-    "movies": null 
+    "birthYear": "1973"
 }
 
 ###
 
-PUT {{MovieAPI_HostAddress}}/api/actors/10
+PUT {{MovieAPI_HostAddress}}/api/actors/26
 Content-Type: application/json
 
 {
-  "actorId": 10,
+  "actorId": 26,
   "name": "Petterson Sven",
-  "birthYear": "1974",
-  "movies": null
+  "birthYear": "1975",
+  "movies": [  ]
 }
 
 ###
-POST {{MovieAPI_HostAddress}}/api/movies/2/actors/3
+@movieId = 2
+@actorId = 3
+POST {{MovieAPI_HostAddress}}/api/movies/{{movieId}}/actors/{{actorId}}
 Content-Type: application/json
+
 {
 
 }
+
+###
+DELETE {{MovieAPI_HostAddress}}/api/actors/43
