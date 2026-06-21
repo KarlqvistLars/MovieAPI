@@ -19,6 +19,7 @@ namespace MovieAPI.Services
             var review = await _db.Reviews
             .Include(m => m.Movie)
             .Select(r => new ReviewDto {
+                Id = r.Id,
                 Title = r.Movie.Title,
                 ReviewerName = r.ReviewerName,
                 Comment = r.Comment,

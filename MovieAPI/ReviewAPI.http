@@ -34,7 +34,8 @@ Content-Type: application/json
   }
 
 ###
-@delid=2
+@delid=11
+
 DELETE {{MovieAPI_HostAddress}}/api/reviews/{{delid}}
 
 ###
