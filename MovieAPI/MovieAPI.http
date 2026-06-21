@@ -4,8 +4,7 @@ GET {{MovieAPI_HostAddress}}/api/movies
 
 ###
 
-@id=2
-GET {{MovieAPI_HostAddress}}/api/movies/{{id}}
+GET {{MovieAPI_HostAddress}}/api/movies/4
 
 ###
 

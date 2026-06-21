@@ -7,7 +7,7 @@ namespace MovieAPI.Interfaces
     {
         public Task<ICollection<ReviewDto>> GetReviews();
 
-        public Task<ReviewDto> GetReview(int id);
+        public Task<ICollection<ReviewDto>> GetReview(int id);
 
         public Task<bool> PutReview(int? id, UpdateReviewDto review);
 

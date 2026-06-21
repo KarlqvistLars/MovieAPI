@@ -27,7 +27,7 @@ public class ReviewsController : ControllerBase
     public async Task<ActionResult<ReviewDto>> GetReview(int id)
     {
         var review = await _reviewService.GetReview(id);
-        if (review == null) { return NotFound(); }
+        //if (review == null) { return NotFound(); }
         return Ok(review);
     }
 
@@ -55,7 +55,7 @@ public class ReviewsController : ControllerBase
         if (result == null) { return NotFound(); }
         return CreatedAtAction(
             nameof(GetReview),
-            new { id = result.Id },
+            new { id = result.ReviewId },
             result);
     }
 

@@ -3,14 +3,14 @@
 GET {{MovieAPI_HostAddress}}/api/reviews
 
 ###
-@id=2
+@getId=2
 
-GET {{MovieAPI_HostAddress}}/api/reviews/{{id}}
+GET {{MovieAPI_HostAddress}}/api/reviews/{{getId}}
 
 ###
-@movieId=2
+@postId=2
 
-POST {{MovieAPI_HostAddress}}/api/reviews/{{movieId}}
+POST {{MovieAPI_HostAddress}}/api/reviews/{{postId}}
 Content-Type: application/json
 
 {
@@ -21,9 +21,9 @@ Content-Type: application/json
 }
 
 ###
-@id=2
+@putId=2
 
-PUT {{MovieAPI_HostAddress}}/api/reviews/{{id}}
+PUT {{MovieAPI_HostAddress}}/api/reviews/{{putId}}
 Content-Type: application/json
 
   {

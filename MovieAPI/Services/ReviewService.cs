@@ -19,7 +19,7 @@ namespace MovieAPI.Services
             var review = await _db.Reviews
             .Include(m => m.Movie)
             .Select(r => new ReviewDto {
-                Id = r.Id,
+                ReviewId = r.ReviewId,
                 Title = r.Movie.Title,
                 ReviewerName = r.ReviewerName,
                 Comment = r.Comment,
@@ -28,17 +28,18 @@ namespace MovieAPI.Services
             return review;
         }
 
-        public async Task<ReviewDto> GetReview(int id)
+        public async Task<ICollection<ReviewDto>> GetReview(int id)
         {
             var review = await _db.Reviews
             .Include(m => m.Movie)
-            .Where(r => r.Id == id)
+            .Where(m => m.Movie.Id == id)
             .Select(r => new ReviewDto {
+                ReviewId = r.ReviewId,
                 Title = r.Movie.Title,
                 ReviewerName = r.ReviewerName,
                 Comment = r.Comment,
                 Rating = r.Rating,
-            }).FirstOrDefaultAsync();
+            }).ToListAsync();
             return review;
         }
 
@@ -82,7 +83,7 @@ namespace MovieAPI.Services
             await _db.SaveChangesAsync();
 
             return new ReviewDto {
-                Id = review.Id,
+                ReviewId = review.ReviewId,
                 Title = movie.Title,
                 ReviewerName = review.ReviewerName,
                 Comment = review.Comment,
