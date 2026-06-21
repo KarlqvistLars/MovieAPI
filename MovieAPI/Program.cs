@@ -26,6 +26,10 @@ namespace MovieAPI
             builder.Services.AddScoped<IActorService, ActorService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
 
+            // Swagger
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -48,6 +52,12 @@ namespace MovieAPI
                 }
                 // Anropar din seed-metod
                 DbSeeder.Initialize(context);
+            }
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
