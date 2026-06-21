@@ -24,6 +24,7 @@ namespace MovieAPI
             builder.Services.AddScoped<IMovieAPIContext, MovieAPIContext>();
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IActorService, ActorService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             var app = builder.Build();
 

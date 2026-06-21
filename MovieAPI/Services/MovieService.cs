@@ -114,6 +114,7 @@ namespace MovieAPI.Services
                 .Include(m => m.Details)
                 .Include(m => m.Actors)
                 .Include(m => m.Genres)
+                .Include(m => m.Reviews)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (existingMovie == null) { return new NotFoundResult(); }
@@ -142,6 +143,10 @@ namespace MovieAPI.Services
             if (existingMovie.Actors != null) { _db.Actors.RemoveRange(existingMovie.Actors); }
             existingMovie.Actors = movieDto!.Actors?.Select(a => new Actor { Name = a.Name })
                 .ToList() ?? new List<Actor>();
+
+            if (existingMovie.Reviews != null) { _db.Reviews.RemoveRange(existingMovie.Reviews); }
+            existingMovie.Reviews = movieDto!.Reviews?.Select(r => new Review { ReviewerName = r.ReviewerName, Rating = r.Rating, Comment = r.Comment })
+                .ToList() ?? new List<Review>();
 
             await _db.SaveChangesAsync();
 

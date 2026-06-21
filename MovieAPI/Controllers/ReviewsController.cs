@@ -1,97 +1,70 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MovieAPI.Data;
-using MovieAPI.Models;
+using MovieAPI.DTOs;
+using MovieAPI.Interfaces;
 
+// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 [Route("api/[controller]")]
 [ApiController]
 public class ReviewsController : ControllerBase
 {
-    private readonly MovieAPIContext _context;
-    public ReviewsController(MovieAPIContext context)
+    private readonly IReviewService _reviewService;
+    public ReviewsController(IReviewService reviewService)
     {
-        _context = context;
+        _reviewService = reviewService;
     }
 
     // GET: api/review
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Review>>> GetReview()
+    public async Task<ActionResult<ICollection<ReviewDto>>> GetReview()
     {
-        return await _context.Reviews.ToListAsync();
+        var reviews = await _reviewService.GetReviews();
+        if (!reviews.Any()) { return NotFound(); }
+        return Ok(reviews);
     }
 
     // GET: api/review/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Review>> GetReview(int id)
+    public async Task<ActionResult<ReviewDto>> GetReview(int id)
     {
-        var review = await _context.Reviews.FindAsync(id);
-
-        if (review == null)
-        {
-            return NotFound();
-        }
-
-        return review;
+        var review = await _reviewService.GetReview(id);
+        if (review == null) { return NotFound(); }
+        return Ok(review);
     }
 
     // PUT: api/review/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutReview(int? id, Review review)
+    public async Task<IActionResult> PutReview(int id, UpdateReviewDto review)
     {
-        if (id != review.Id)
-        {
-            return BadRequest();
-        }
+        bool updated = await _reviewService.PutReview(id, review);
 
-        _context.Entry(review).State = EntityState.Modified;
-
-        try
+        if (!updated)
         {
-            await _context.SaveChangesAsync();
-        } catch (DbUpdateConcurrencyException)
-        {
-            if (!ReviewExists(id))
-            {
-                return NotFound();
-            } else
-            {
-                throw;
-            }
+            return NotFound();
         }
 
         return NoContent();
     }
 
     // POST: api/review
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Review>> PostReview(Review review)
+    [HttpPost("{movieId:int}")]
+    public async Task<ActionResult<ReviewDto>> PostReview(
+        int movieId,
+        [FromBody] ReviewDto reviewDto)
     {
-        _context.Reviews.Add(review);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetReview", new { id = review.Id }, review);
+        var result = await _reviewService.PostReview(movieId, reviewDto);
+        if (result == null) { return NotFound(); }
+        return CreatedAtAction(
+            nameof(GetReview),
+            new { id = result.Id },
+            result);
     }
 
     // DELETE: api/review/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteReview(int? id)
     {
-        var review = await _context.Reviews.FindAsync(id);
-        if (review == null)
-        {
-            return NotFound();
-        }
-
-        _context.Reviews.Remove(review);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        var result = await _reviewService.DeleteReview(id);
+        return result;
     }
 
-    private bool ReviewExists(int? id)
-    {
-        return _context.Reviews.Any(e => e.Id == id);
-    }
 }

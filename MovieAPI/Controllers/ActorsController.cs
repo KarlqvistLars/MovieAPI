@@ -16,7 +16,7 @@ public class ActorsController : ControllerBase
 
     // GET: api/actors
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ActorDto>>> GetActors()
+    public async Task<ActionResult<ICollection<ActorDto>>> GetActors()
     {
         var actors = await _actorService.GetActors();
         if (actors == null || !actors.Any())

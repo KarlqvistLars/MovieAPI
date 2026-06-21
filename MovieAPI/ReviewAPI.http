@@ -3,24 +3,35 @@
 GET {{MovieAPI_HostAddress}}/api/reviews
 
 ###
+@id=2
 
 GET {{MovieAPI_HostAddress}}/api/reviews/{{id}}
 
 ###
-@id=1
-GET {{MovieAPI_HostAddress}}/api/movies/{{id}}/reviews
-
 @movieId=2
-###
-POST {{MovieAPI_HostAddress}}/api/movies/{{movieId}}/reviews
 
-###
-PUT {{MovieAPI_HostAddress}}/api/reviews/{id}
+POST {{MovieAPI_HostAddress}}/api/reviews/{{movieId}}
 Content-Type: application/json
 
 {
-  //Nullable
+  "title": "Monty Python's Life of Brian",
+  "reviewerName": "Lars Karlqvist",
+  "comment": "Nästan rolig... hahaha.",
+  "rating": 3
 }
+
+###
+@id=2
+
+PUT {{MovieAPI_HostAddress}}/api/reviews/{{id}}
+Content-Type: application/json
+
+  {
+    "title": "Monty Python's Life of Brian",
+    "reviewerName": "Adam Brannon",
+    "comment": "After last year’s bitterly disappointing Once Upon A Time in Hollywood bla bla.",
+    "rating": 4
+  }
 
 ###
 @delid=2
