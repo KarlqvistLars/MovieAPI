@@ -1,94 +1,63 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MovieAPI.Data;
 using MovieAPI.DTOs;
-using MovieAPI.Models;
+using MovieAPI.Interfaces;
 
+// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 [Route("api/[controller]")]
 [ApiController]
 public class ActorsController : ControllerBase
 {
-    private readonly MovieAPIContext _context;
-    public ActorsController(MovieAPIContext context)
+    private readonly IActorService _actorService;
+
+    public ActorsController(IActorService actorService)
     {
-        _context = context;
+        _actorService = actorService;
     }
 
-    // GET: api/Actor
+    // GET: api/actors
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Actor>>> GetActors()
+    public async Task<ActionResult<ICollection<ActorDto>>> GetActors()
     {
-        return await _context.Actors.ToListAsync();
+        var actors = await _actorService.GetActors();
+        if (actors == null || !actors.Any())
+        {
+            return NotFound();
+        }
+        return Ok(actors);
     }
 
-    // GET: api/Actor/5
-    [HttpGet("{actorid:int}")]
-    public async Task<ActionResult<Actor>> GetActor(int actorid)
+    //    GET: api/actor/5
+    [HttpGet("{actorid}")]
+    public async Task<ActionResult<ActorDto>> GetActor(int actorid)
     {
-        var actor = await _context.Actors.FindAsync(actorid);
+        var actor = await _actorService.GetActor(actorid);
         if (actor == null)
         {
             return NotFound();
         }
-        return actor;
+        return Ok(actor);
     }
 
-    // PUT: api/Actor/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{actorid:int}")]
+    // POST: api/actor
+    [HttpPost]
+    public async Task<ActionResult<ActorDto>> PostActor(ActorDto actor)
+    {
+        var result = await _actorService.PostActor(actor);
+        return CreatedAtAction(nameof(GetActor), new { actorId = actor.ActorId }, result.Value);
+    }
+
+    // PUT: api/actor/5
+    [HttpPut("{actorid}")]
     public async Task<IActionResult> PutActor(int actorid, ActorDto actor)
     {
-        if (actorid != actor.ActorId) return BadRequest();
-        var existingActor = await _context.Actors
-            .FirstOrDefaultAsync(a => a.ActorId == actorid);
-        if (existingActor == null) return NotFound();
-        existingActor.Name = actor.Name;
-        existingActor.BirthYear = actor.BirthYear;
-        try
-        {
-            await _context.SaveChangesAsync();
-        } catch (DbUpdateConcurrencyException)
-        {
-            if (!ActorExists(actorid))
-            {
-                return NotFound();
-            } else
-            {
-                throw;
-            }
-        }
-        return Ok();
+        return await _actorService.PutActor(actorid, actor);
     }
 
-    // POST: api/Actor
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Actor>> PostActor(Actor actor)
-    {
-        _context.Actors.Add(actor);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetActor", new { actorid = actor.ActorId }, actor);
-    }
-
-    // DELETE: api/Actor/5
+    // DELETE: api/actor/5
     [HttpDelete("{actorid}")]
     public async Task<IActionResult> DeleteActor(int? actorid)
     {
-        var actor = await _context.Actors.FindAsync(actorid);
-        if (actor == null)
-        {
-            return NotFound();
-        }
-
-        _context.Actors.Remove(actor);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    private bool ActorExists(int? actorid)
-    {
-        return _context.Actors.Any(e => e.ActorId == actorid);
+        var result = await _actorService.DeleteActor(actorid);
+        return result;
     }
 }

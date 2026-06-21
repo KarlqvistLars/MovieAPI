@@ -8,6 +8,6 @@
         public int Rating { get; set; } // Rating (1–5)
         // 1:M till Movie
         public int MovieId { get; set; }
-        public Movie? Movie { get; set; }
+        public Movie Movie { get; set; } = null!;
     }
 }

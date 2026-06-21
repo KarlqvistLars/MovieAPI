@@ -11,7 +11,7 @@ using MovieAPI.Data;
 namespace MovieAPI.Migrations
 {
     [DbContext(typeof(MovieAPIContext))]
-    [Migration("20260617130947_Init")]
+    [Migration("20260618203739_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -235,7 +235,8 @@ namespace MovieAPI.Migrations
 
             modelBuilder.Entity("MovieAPI.Models.MovieDetails", b =>
                 {
-                    b.Navigation("Movie");
+                    b.Navigation("Movie")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

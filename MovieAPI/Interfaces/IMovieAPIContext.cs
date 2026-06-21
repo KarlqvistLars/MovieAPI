@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MovieAPI.Models;
 
 namespace MovieAPI.Interfaces
@@ -10,6 +11,8 @@ namespace MovieAPI.Interfaces
         DbSet<Genre> Genres { get; set; }
         DbSet<Actor> Actors { get; set; }
         DbSet<Review> Reviews { get; set; }
+
+        EntityEntry Entry(object entity);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken =
         default);
     }
