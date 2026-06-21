@@ -148,7 +148,7 @@ namespace MovieAPI.Tests
                 Genres = new List<GenreDto>(),
                 Reviews = new List<ReviewDto> {
                     new ReviewDto {
-                        Id = 1,
+                        ReviewId = 1,
                         ReviewerName = "Test Reviewer",
                         Rating = 5,
                         Comment = "Great movie!"
