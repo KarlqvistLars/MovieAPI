@@ -122,10 +122,36 @@ namespace MovieAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "MovieActor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    ActorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieActor", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MovieActor_Actors_ActorId",
+                        column: x => x.ActorId,
+                        principalTable: "Actors",
+                        principalColumn: "ActorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovieActor_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    ReviewId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReviewerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -134,7 +160,7 @@ namespace MovieAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.ReviewId);
                     table.ForeignKey(
                         name: "FK_Reviews_Movies_MovieId",
                         column: x => x.MovieId,
@@ -152,6 +178,16 @@ namespace MovieAPI.Migrations
                 name: "IX_GenreMovie_MoviesId",
                 table: "GenreMovie",
                 column: "MoviesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieActor_ActorId",
+                table: "MovieActor",
+                column: "ActorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieActor_MovieId",
+                table: "MovieActor",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_DetailsId",
@@ -176,13 +212,16 @@ namespace MovieAPI.Migrations
                 name: "GenreMovie");
 
             migrationBuilder.DropTable(
+                name: "MovieActor");
+
+            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "Actors");
+                name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Genres");
+                name: "Actors");
 
             migrationBuilder.DropTable(
                 name: "Movies");

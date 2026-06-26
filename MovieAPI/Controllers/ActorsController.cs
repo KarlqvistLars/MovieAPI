@@ -3,6 +3,9 @@ using MovieAPI.DTOs;
 using MovieAPI.Interfaces;
 
 // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+/// <summary>
+/// Controller för att hantera CRUD-operationer för skådespelare (Actors).
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class ActorsController : ControllerBase

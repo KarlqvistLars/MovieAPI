@@ -11,7 +11,7 @@ using MovieAPI.Data;
 namespace MovieAPI.Migrations
 {
     [DbContext(typeof(MovieAPIContext))]
-    [Migration("20260618203739_Init")]
+    [Migration("20260621183009_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -124,6 +124,29 @@ namespace MovieAPI.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("MovieAPI.Models.MovieActor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorId");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieActor");
+                });
+
             modelBuilder.Entity("MovieAPI.Models.MovieDetails", b =>
                 {
                     b.Property<int>("MovieDetailsId")
@@ -151,11 +174,11 @@ namespace MovieAPI.Migrations
 
             modelBuilder.Entity("MovieAPI.Models.Review", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -171,7 +194,7 @@ namespace MovieAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ReviewId");
 
                     b.HasIndex("MovieId");
 
@@ -217,6 +240,25 @@ namespace MovieAPI.Migrations
                     b.Navigation("Details");
                 });
 
+            modelBuilder.Entity("MovieAPI.Models.MovieActor", b =>
+                {
+                    b.HasOne("MovieAPI.Models.Actor", "Actor")
+                        .WithMany("MovieActors")
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieAPI.Models.Movie", "Movie")
+                        .WithMany("MovieActors")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Actor");
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("MovieAPI.Models.Review", b =>
                 {
                     b.HasOne("MovieAPI.Models.Movie", "Movie")
@@ -228,8 +270,15 @@ namespace MovieAPI.Migrations
                     b.Navigation("Movie");
                 });
 
+            modelBuilder.Entity("MovieAPI.Models.Actor", b =>
+                {
+                    b.Navigation("MovieActors");
+                });
+
             modelBuilder.Entity("MovieAPI.Models.Movie", b =>
                 {
+                    b.Navigation("MovieActors");
+
                     b.Navigation("Reviews");
                 });
 
