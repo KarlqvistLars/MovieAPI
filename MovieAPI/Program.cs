@@ -40,7 +40,8 @@ namespace MovieAPI
                         Url = new Uri("https://www.larskarlqvist.se")
                     },
                     License = new OpenApiLicense {
-                        Name = "MIT License"
+                        Name = "Apache 2.0",
+                        Url = new Uri("https://www.apache.org/licenses/LICENSE-2.0.html")
                     }
                 });
             });
