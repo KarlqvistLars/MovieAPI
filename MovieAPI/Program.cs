@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using MovieAPI.Data;
 using MovieAPI.Data.Seed;
 using MovieAPI.Interfaces;
@@ -28,7 +29,22 @@ namespace MovieAPI
 
             // Swagger
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(option => {
+                option.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo {
+                    Title = "Movie API",
+                    Version = "v1",
+                    Description = "API för hantering av filmer, skådespelare och recensioner.",
+                    Contact = new OpenApiContact {
+                        Name = "Lars Karlqvist",
+                        Email = "example@email.se",
+                        Url = new Uri("https://www.larskarlqvist.se")
+                    },
+                    License = new OpenApiLicense {
+                        Name = "Apache 2.0",
+                        Url = new Uri("https://www.apache.org/licenses/LICENSE-2.0.html")
+                    }
+                });
+            });
 
             var app = builder.Build();
 
