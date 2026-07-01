@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Interfaces;
+using MovieAPI.Login;
 using MovieAPI.Models;
 
 namespace MovieAPI.Data;
 
-public class MovieAPIContext : DbContext, IMovieAPIContext
+public class MovieAPIContext : IdentityDbContext<AppUser>, IMovieAPIContext
 {
     public MovieAPIContext(DbContextOptions<MovieAPIContext> options) : base(options)
     {
